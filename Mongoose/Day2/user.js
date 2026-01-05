@@ -3,22 +3,29 @@ const {Schema} = mongoose;
 
 const userSchema = new Schema({
     firstName:{
-        type:String
+        type:String,
+        required:true
+
     },
     lastName:{
         type:String
     },
     age:{
-        type:Number
+        type:Number,
+        min:18,
+        max:80
+
     },
     gender:{
         type:String
     },
     emailId:{
-        type:String
+        type:String,
+        required:true
     },
     password:{
-        type:String
+        type:String,
+        required:true
     },
     photo:{
        type:String 
