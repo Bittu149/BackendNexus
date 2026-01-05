@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
-
+// Schema level validations
 const userSchema = new Schema({
     firstName:{
         type:String,
-        required:true
+        required:true,
+        minLength:3,
+        maxLength:20
 
     },
     lastName:{
@@ -17,21 +19,26 @@ const userSchema = new Schema({
 
     },
     gender:{
-        type:String
+        type:String,
+        enum:["male","female","others"]
     },
     emailId:{
         type:String,
-        required:true
+        required:true,
+        unique:true,
+        trim:true,
+        lowercase:true
     },
     password:{
         type:String,
         required:true
     },
     photo:{
-       type:String 
+       type:String,
+       default:"This is default photo url"
     }
 
-})
+},{timestamps:true})
 
 const User = mongoose.model("User", userSchema);
 
