@@ -30,6 +30,17 @@ app.get("/info",async(req,res)=>{
 
 })
 
+app.get("/user/:id",async(req,res)=>{
+    
+    try{
+        const result = await User.findById(req.params.id);
+        res.send(result);
+    }
+    catch(err){
+        res.send("Error"+err.message);
+    }
+})
+
 
 
 
