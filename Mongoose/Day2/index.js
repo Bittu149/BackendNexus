@@ -41,6 +41,16 @@ app.get("/user/:id",async(req,res)=>{
     }
 })
 
+app.delete("/delete/:id",async(req,res)=>{
+    try{
+        await User.findByIdAndDelete(req.params.id);
+        res.send("User Deleted Sucessfully");
+    }
+    catch(err){
+        res.send("Error"+err.message);
+    }
+})
+
 
 
 
