@@ -52,6 +52,19 @@ app.delete("/delete/:id",async(req,res)=>{
 })
 
 
+app.patch("/user",async(req,res)=>{
+
+    try{
+       const {_id,...update} = req.body
+        await User.findByIdAndUpdate(_id,update);
+       res.send("user update Secussfully");
+    }
+    catch(err){
+        res.send("Error"+err.message);
+    }
+})
+
+
 
 
 
