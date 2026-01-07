@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const main = require("./Database");
 const User = require("./user");
+const validateUser = require("./Validate");
 
 app.use(express.json());
 
@@ -14,12 +15,8 @@ app.get("/info", async (req, res) => {
 // REGISTER
 app.post("/register", async (req, res) => {
   try {
-    const mandatoryFields = ["firstName", "emailId", "age", "password"];
-    const isAllowed = mandatoryFields.every(k => k in req.body);
-
-    if (!isAllowed) {
-      return res.status(400).send("Fields missing");
-    }
+     
+    validateUser(req.body);
 
     const user = await User.create(req.body);
     console.log("CREATED:", user);
