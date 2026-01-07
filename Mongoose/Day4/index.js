@@ -3,6 +3,7 @@ const app = express();
 const main = require("./Database");
 const User = require("./user");
 const validateUser = require("./Validate");
+const bcrypt = require("bcrypt");
 
 app.use(express.json());
 
@@ -17,6 +18,10 @@ app.post("/register", async (req, res) => {
   try {
      
     validateUser(req.body);
+
+    // Converting  plain password to hashed password
+    req.body.password = await bcrypt.hash(req.body.password,10);
+
 
     const user = await User.create(req.body);
     console.log("CREATED:", user);
