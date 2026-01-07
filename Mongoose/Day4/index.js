@@ -33,6 +33,36 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+
+    // basic validation
+    if (!emailId || !password) {
+      return res.status(400).send("EmailId and password required");
+    }
+
+    // ❌ findById hata diya
+    // ✅ email se user nikalna
+    const people = await User.findOne({ emailId });
+
+    if (!people) {
+      throw new Error("Invalid credentials");
+    }
+
+    // password compare
+    const isAllowed = await bcrypt.compare(password, people.password);
+
+    if (!isAllowed) {
+      throw new Error("Invalid credentials");
+    }
+
+    res.send("Login Successfully");
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
+  }
+});
+
 // DELETE
 app.delete("/info", async (req, res) => {
   await User.deleteOne({ firstName: "Aditya" });
