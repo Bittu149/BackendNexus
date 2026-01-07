@@ -1,4 +1,5 @@
-
+//Digital Signature ko use karte hai password ko or har imp chiz ko encrypt  karne ke liye with the help of public and private key
+// Hashing q karte hai integrity ko maintain karne ke liye
 //Go to the google and search npm validator package for validation of email and password 
 const validator = require("validator");
 function validateUser(data){
