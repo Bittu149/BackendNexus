@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 async function main() {
   // 🔗 DB connect
-  await mongoose.connect("mongodb://localhost:27017/bookstore");
+  await mongoose.connect("mongodb://localhost:27017/Instagram");
 
   // Schema (CORRECT)
 //   const userSchema = new mongoose.Schema({

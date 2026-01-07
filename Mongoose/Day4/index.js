@@ -1,54 +1,60 @@
 const express = require("express");
 const app = express();
 const main = require("./Database");
-const User = require("./user")
+const User = require("./user");
 
 app.use(express.json());
 
-app.get("/info",async(req,res)=>{
-   const ans =  await User.find({});
-   res.send(ans);
+// GET all users
+app.get("/info", async (req, res) => {
+  const users = await User.find({});
+  res.json(users);
+});
 
-})
+// REGISTER
+app.post("/register", async (req, res) => {
+  try {
+    const mandatoryFields = ["firstName", "emailId", "age", "password"];
+    const isAllowed = mandatoryFields.every(k => k in req.body);
 
-app.post("/info",async(req,res)=>{
-
-    try{
-   const mandatoryFields = ["firstName","emailId","age"];
-   const IsAllowed = mandatoryFields.every((k)=> Object.keys(req.body).includes(k));
-
-   if(!IsAllowed)
-    throw new Error("Fields missing");
-
-   await User.create(req.body);
-   res.send("User Registered Suceessfully");
+    if (!isAllowed) {
+      return res.status(400).send("Fields missing");
     }
-    catch(err){
-        res.status(500).send(err);
-    }
-    res.send("Data has been added seccessfully");
-})
 
-app.delete("/info",async(req,res)=>{
-    await User.deleteOne({name:"Aditya"});
-    res.send("Data has been deleted sucessfully");
-})
+    const user = await User.create(req.body);
+    console.log("CREATED:", user);
 
-app.put("/info",async(req,res)=>{
-    const result = await User.updateOne({name:"Aditya"},{age:20,city:"Afrad"});
-    res.send("Data has been updated sucessfully");
-})
+    return res.send("User Registered Successfully");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err.message);
+  }
+});
 
+// DELETE
+app.delete("/info", async (req, res) => {
+  await User.deleteOne({ firstName: "Aditya" });
+  res.send("Data has been deleted successfully");
+});
+
+// UPDATE
+app.put("/info", async (req, res) => {
+  await User.updateOne(
+    { firstName: "Aditya" },
+    { age: 20 }
+  );
+  res.send("Data has been updated successfully");
+});
 
 main()
-.then(async () =>{
-    console.log("Connected to DB (LOCAL)")
-    app.listen(3000,()=>{
-    console.log("Server is running on port no 3000");
-    })
+  .then(async () => {
+    console.log("Connected to DB (LOCAL)");
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
 
-    const result = await User.find({name:"Bittu"});
-    console.log(result);
-
-})
- .catch((err) => console.log(err));
+    // CORRECT FIND
+    const result = await User.find({ firstName: "Bittu" });
+    console.log("FOUND:", result);
+  })
+  .catch(err => console.log(err));
