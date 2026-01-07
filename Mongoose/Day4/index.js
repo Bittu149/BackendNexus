@@ -14,13 +14,18 @@ app.get("/info",async(req,res)=>{
 app.post("/info",async(req,res)=>{
 
     try{
-    const ans = new User(req.body);
-    await ans.save();
+   const mandatoryFields = ["firstName","emailId","age"];
+   const IsAllowed = mandatoryFields.every((k)=> Object.keys(req.body).includes(k));
+
+   if(!IsAllowed)
+    throw new Error("Fields missing");
+
+   await User.create(req.body);
+   res.send("User Registered Suceessfully");
     }
     catch(err){
         res.status(500).send(err);
     }
-
     res.send("Data has been added seccessfully");
 })
 
