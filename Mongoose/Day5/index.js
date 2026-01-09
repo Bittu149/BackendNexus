@@ -61,27 +61,16 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    const { emailId, password } = req.body;
-
-    // basic validation
-    if (!emailId || !password) {
-      return res.status(400).send("EmailId and password required");
-    }
     
-    const people = await User.findOne({ emailId });
-
-    if (!people) {
-      throw new Error("Invalid credentials");
-    }
-
+    const people = await User.find({emailId:req.body.emailId});
     
-    const isAllowed = await bcrypt.compare(password, people.password);
+    const IsAllowed = await bcrypt.compare(req.body.password, people.password);
 
-    if (!isAllowed) {
+    if (!IsAllowed) {
       throw new Error("Invalid credentials");
     }
     // JWT token
-    const token = jwt.sign({_id:people._id,emailId:people.emailId}, "secretkey");
+    const token = jwt.sign({_id:people._id,emailId:people.emailId}, "secretkey",{expiresIn:10});
     res.cookie("Token",token);
     res.send("Login Successfully");
   } catch (err) {
