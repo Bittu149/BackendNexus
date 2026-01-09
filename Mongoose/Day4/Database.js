@@ -44,3 +44,6 @@ module.exports = main;
 // header -> algorithm and token type
 // payload -> contains actual data
 // digital Signature -> to verify the token is not tampered with
+// Hashcode -> it is used to convert data into fixed length string of characters 
+// hashcode one way hota hai jise reverse nhi kiya ja sakta
+// encription -> two way hoata hai jise reverse kiya ja sakta hai using public and private or secrete or server key 
