@@ -22,6 +22,7 @@ const userAuth = async(req,res, next)=>{
         throw new Error("User not found");
         }
         req.result = result;
+        console.log("User Authentication Sucessfully");
 
         next();
     }
