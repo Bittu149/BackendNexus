@@ -36,14 +36,3 @@ async function main() {
 }
 
 module.exports = main;
-
-// JWT.io website -> to encode and decode JWT tokens
-// JWT Stand for JSON WEB TOKEN 
-// it is used for authentication and inforamtion exchange between two parties
-// ye string hota hai jo 3 parts me divided hota hai header.payload.digitalSignature
-// header -> algorithm and token type
-// payload -> contains actual data
-// digital Signature -> to verify the token is not tampered with
-// Hashcode -> it is used to convert data into fixed length string of characters 
-// hashcode one way hota hai jise reverse nhi kiya ja sakta
-// encription -> two way hoata hai jise reverse kiya ja sakta hai using public and private or secrete or server key 

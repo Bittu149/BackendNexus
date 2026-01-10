@@ -6,6 +6,7 @@ const validateUser = require("./Validate");
 const bcrypt = require("bcrypt");
 const cookieParser = require('cookie-parser');
 const  jwt = require('jsonwebtoken');
+const userAuth = require("./Middleware/userAuth");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -14,7 +15,7 @@ app.use(cookieParser());
 // npm jwttoken
 
 // GET all users
-app.get("/info", async (req, res) => {
+app.get("/info", userAuth, async (req, res) => {
   try {
      const payload = jwt.verify(req.cookies.Token, "secretkey");
      console.log(payload);
@@ -25,13 +26,11 @@ app.get("/info", async (req, res) => {
   }
 });
 
-app.get("/user",async(req,res)=>{
+app.get("/user", userAuth,async(req,res)=>{
 
   try{
-    const payload = jwt.verify(req.cookies.Token, "secretkey");
-    //console.log(payload);
-    const result = await User.findById(payload._id);
-    res.send(result);
+
+    
   }
   catch(err){
     res.send("Error:" + err.message);
@@ -40,7 +39,7 @@ app.get("/user",async(req,res)=>{
 
 
 // REGISTER
-app.post("/register", async (req, res) => {
+app.post("/register", userAuth, async (req, res) => {
   try {
      
     validateUser(req.body);
@@ -59,7 +58,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", userAuth, async (req, res) => {
   try {
     
     const people = await User.find({emailId:req.body.emailId});
@@ -79,13 +78,13 @@ app.post("/login", async (req, res) => {
 });
 
 // DELETE
-app.delete("/info", async (req, res) => {
+app.delete("/info", userAuth,async (req, res) => {
   await User.deleteOne({ firstName: "Aditya" });
   res.send("Data has been deleted successfully");
 });
 
 // UPDATE
-app.put("/info", async (req, res) => {
+app.put("/info", userAuth, async (req, res) => {
   await User.updateOne(
     { firstName: "Aditya" },
     { age: 20 }

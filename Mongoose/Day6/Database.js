@@ -48,3 +48,7 @@ module.exports = main;
 // Hashcode -> it is used to convert data into fixed length string of characters 
 // hashcode one way hota hai jise reverse nhi kiya ja sakta
 // encription -> two way hoata hai jise reverse kiya ja sakta hai using public and private or secrete or server key 
+// refresh jwt token -> it is used to generate new access token once access token is expired without login again
+// Refresh token koi information nhi rakhta sirf access token generate karne ke kaam aata hai 
+// Refresh token koi random string hota hai jise server side store kiya jata hai 
+// Refresh token hashcode me store kiya jata hai taaki agar koi refresh token leak ho jaye to usse koi fyda na ho 
