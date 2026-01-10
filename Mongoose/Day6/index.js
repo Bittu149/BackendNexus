@@ -30,7 +30,7 @@ app.get("/user", userAuth,async(req,res)=>{
 
   try{
 
-    
+    res.send(req.result);
   }
   catch(err){
     res.send("Error:" + err.message);
