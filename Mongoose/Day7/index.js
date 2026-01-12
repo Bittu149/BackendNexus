@@ -61,15 +61,15 @@ app.post("/register", userAuth, async (req, res) => {
 app.post("/login", userAuth, async (req, res) => {
   try {
     
-    const people = await User.find({emailId:req.body.emailId});
+    const people = await User.findOne({emailId:req.body.emailId});
     
     const IsAllowed = await bcrypt.compare(req.body.password, people.password);
 
-    if (!IsAllowed) {
+    if (!IsAllowed) 
       throw new Error("Invalid credentials");
-    }
+    
     // JWT token
-    const token = jwt.sign({_id:people._id,emailId:people.emailId}, "secretkey",{expiresIn:10});
+    const token = people.getJWT();
     res.cookie("Token",token);
     res.send("Login Successfully");
   } catch (err) {

@@ -40,6 +40,13 @@ const userSchema = new Schema({
 
 },{timestamps:true})
 
+userSchema.methods.getJWT = function(){
+
+    const ans = jwt.sign({_id:this._id,emailId:this.emailId},"secretkey");
+
+    return ans;
+}
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
