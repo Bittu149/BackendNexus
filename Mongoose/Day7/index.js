@@ -8,56 +8,20 @@ const cookieParser = require('cookie-parser');
 const  jwt = require('jsonwebtoken');
 const userAuth = require("./Middleware/userAuth");
 const env = require('dotenv').config({ path: __dirname + '/../.env' });
+const authRouter = require("./Routes/Auth");
+const userRouter = require("./Routes/user");
 
 
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/", authRouter);
+app.use("/", userRouter);
 // npm cookie parser
 // npm install 
 // npm jwttoken
 
 // GET all users
-app.get("/info", userAuth, async (req, res) => {
-  try {
-     const payload = jwt.verify(req.cookies.Token, "secretkey");
-     console.log(payload);
-     res.send(await User.find());
-    } 
-     catch (err) {
-    res.status(401).send(err.message);
-  }
-});
-
-app.get("/user", userAuth,async(req,res)=>{
-
-  try{
-
-    res.send(req.result);
-  }
-  catch(err){
-    res.send("Error:" + err.message);
-  }
-})
-
-
-
-
-// DELETE
-app.delete("/info", userAuth,async (req, res) => {
-  await User.deleteOne({ firstName: "Aditya" });
-  res.send("Data has been deleted successfully");
-});
-
-// UPDATE
-app.put("/info", userAuth, async (req, res) => {
-  await User.updateOne(
-    { firstName: "Aditya" },
-    { age: 20 }
-  );
-  res.send("Data has been updated successfully");
-});
-
 main()
   .then(async () => {
     console.log("Connected to DB (LOCAL)");

@@ -1,4 +1,6 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
+const User = require("../user");
 
 
 // Create Router
@@ -44,3 +46,5 @@ authRouter.post("/login", async (req, res) => {
     res.status(400).send("Error: " + err.message);
   }
 });
+
+module.exports = authRouter;
