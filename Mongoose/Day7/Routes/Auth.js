@@ -1,44 +1,46 @@
-// const express = require("express");
+const express = require("express");
 
 
-// // Create Router
-// express
+// Create Router
+const authRouter = express.Router();
 
-// app.post("/register", async (req, res) => {
-//   try {
+
+
+authRouter.post("/register", async (req, res) => {
+  try {
      
-//     validateUser(req.body);
+    validateUser(req.body);
 
-//     // Converting  plain password to hashed password
-//     req.body.password = await bcrypt.hash(req.body.password,10);
+    // Converting  plain password to hashed password
+    req.body.password = await bcrypt.hash(req.body.password,10);
 
 
-//     const user = await User.create(req.body);
-//     console.log("CREATED:", user);
+    const user = await User.create(req.body);
+    console.log("CREATED:", user);
 
-//     return res.send("User Registered Successfully");
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).send(err.message);
-//   }
-// });
+    return res.send("User Registered Successfully");
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(err.message);
+  }
+});
 
-// app.post("/login", async (req, res) => {
-//   try {
+authRouter.post("/login", async (req, res) => {
+  try {
     
-//     const people = await User.findOne({emailId:req.body.emailId});
+    const people = await User.findOne({emailId:req.body.emailId});
     
-//     const  IsAllowed = await people.verifyPassword(req.body.password);
+    const  IsAllowed = await people.verifyPassword(req.body.password);
 
 
-//     if (!IsAllowed) 
-//       throw new Error("Invalid credentials");
+    if (!IsAllowed) 
+      throw new Error("Invalid credentials");
     
-//     // JWT token
-//     const token = people.getJWT();
-//     res.cookie("Token",token);
-//     res.send("Login Successfully");
-//   } catch (err) {
-//     res.status(400).send("Error: " + err.message);
-//   }
-// });
+    // JWT token
+    const token = people.getJWT();
+    res.cookie("Token",token);
+    res.send("Login Successfully");
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
+  }
+});
