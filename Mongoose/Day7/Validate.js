@@ -6,8 +6,8 @@ function validateUser(data){
     const mandatoryFields = ["firstName", "emailId", "age", "password"];
     const isAllowed = mandatoryFields.every((k)=> Object.keys(data).includes(k));
 
-    if (!isAllowed) 
-      return res.status(400).send("Fields missing");
+          if (!isAllowed)
+               throw new Error("Fields missing");
 
     if(!validator.isEmail(data.emailId))
          throw new Error("invalid email id");

@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const  jwt = require('jsonwebtoken');
 const userAuth = require("./Middleware/userAuth");
 
+
 app.use(express.json());
 app.use(cookieParser());
 // npm cookie parser
@@ -39,7 +40,7 @@ app.get("/user", userAuth,async(req,res)=>{
 
 
 // REGISTER
-app.post("/register", userAuth, async (req, res) => {
+app.post("/register", async (req, res) => {
   try {
      
     validateUser(req.body);
@@ -58,12 +59,13 @@ app.post("/register", userAuth, async (req, res) => {
   }
 });
 
-app.post("/login", userAuth, async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
     
     const people = await User.findOne({emailId:req.body.emailId});
     
-    const IsAllowed = await bcrypt.compare(req.body.password, people.password);
+    const  IsAllowed = await people.verifyPassword(req.body.password);
+
 
     if (!IsAllowed) 
       throw new Error("Invalid credentials");

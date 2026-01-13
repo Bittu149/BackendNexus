@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
+const bcrypt = require("bcrypt");
+const  jwt = require('jsonwebtoken');
 // Schema level validations
 const userSchema = new Schema({
     firstName:{
@@ -46,6 +48,14 @@ userSchema.methods.getJWT = function(){
 
     return ans;
 }
+
+userSchema.methods.verifyPassword = async function(Uerpassword){
+    const ans = await bcrypt.compare(Uerpassword, this.password);
+    
+    return ans;
+}
+
+//ak yaha pe static function hota hai 
 
 const User = mongoose.model("User", userSchema);
 
