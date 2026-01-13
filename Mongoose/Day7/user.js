@@ -44,7 +44,7 @@ const userSchema = new Schema({
 
 userSchema.methods.getJWT = function(){
 
-    const ans = jwt.sign({_id:this._id,emailId:this.emailId},"secretkey");
+    const ans = jwt.sign({_id:this._id,emailId:this.emailId},process.env.SECRET_KEY); // Process.env ak global object hai 
 
     return ans;
 }
