@@ -15,7 +15,7 @@ const userRouter = require("./Routes/user");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", authRouter);
+app.use("/auth", authRouter);
 app.use("/", userRouter);
 // npm cookie parser
 // npm install 
