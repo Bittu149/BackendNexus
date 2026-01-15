@@ -62,4 +62,10 @@ authRouter.post("/logout", (req,res)=>{
 
 })
 
+
+// redis ak database hai 
+// redis bohut fast hot hai 
+// agr hm baar baar same data ko access karte hai toh hm redis me store kar sakte hai
+// go to the redis website to know more about redis
+// redis inmemory database hai  
 module.exports = authRouter;
