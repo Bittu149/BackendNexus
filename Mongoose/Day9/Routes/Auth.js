@@ -1,6 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../user");
+const jwt = require('jsonwebtoken');
+const userAuth = require("./Middleware/userAuth");
 const { redisClient } = require("../config/redis");
 
 
@@ -49,23 +51,32 @@ authRouter.post("/login", async (req, res) => {
 });
 
 
-authRouter.post("/logout", async(req,res)=>{
+authRouter.post("/logout", userAuth, async(req,res)=>{
     
   try{
      
-    const {token} = req.cookies;
-    await redisClient.set(`token:&{token}`,"Blocked");
-    await redisClient.expire(`token:&{token}`, 1800);
-    res.cookie("token",null,{expires:new Date(Date.now())});
-    res.send("Logout Sucessfully");
+    const token = req.cookies.Token;
+    console.log(token);
+
+    // if (!token) {
+    //   return res.status(400).send("No token found");
+    // }
+
+    const payload = jwt.decode(token);
+    console.log(payload);
+
+    await redisClient.set(`token:${token}`, "Blocked");
+    //await redisClient.expire(`token:${token}`, 1800); // Total time to live 30 minutes
+    await redisClient.expireAt(`token:&{token}`, payload.expire);
+
+    res.clearCookie("Token");
+    res.send("Logout Successfully");
 
   }
   catch(err){
-    res.send("Error:"+err.message);
+    res.status(400).send("Error: " + err.message);
   }
-
-
-})
+});
 
 
 // redis ak database hai 
