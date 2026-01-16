@@ -23,4 +23,8 @@ const connectRedis = async () => {
     }
 };
 
+// Redis key value pair me store karta hai 
+// q ki value ko retrive karna bohut fast hota hai 
+// key unique hona chahiye 
+
 module.exports = { redisClient, connectRedis };

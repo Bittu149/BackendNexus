@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../user");
+const { redisClient } = require("../config/redis");
 
 
 // Create Router
@@ -48,10 +49,14 @@ authRouter.post("/login", async (req, res) => {
 });
 
 
-authRouter.post("/logout", (req,res)=>{
+authRouter.post("/logout", async(req,res)=>{
     
   try{
-    res.cookie("Token",null,{expires:new Date(Date.now())});
+     
+    const {token} = req.cookies;
+    await redisClient.set(`token:&{token}`,"Blocked");
+    await redisClient.expire(`token:&{token}`, 1800);
+    res.cookie("token",null,{expires:new Date(Date.now())});
     res.send("Logout Sucessfully");
 
   }
