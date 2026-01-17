@@ -11,6 +11,7 @@ const env = require('dotenv').config({ path: __dirname + '/../.env' });
 const authRouter = require("./Routes/Auth");
 const userRouter = require("./Routes/user");
 const { redisClient, connectRedis } = require("./config/redis");
+const rateLimiter = require("./Middleware/rateLimiter");
 
 app.use(express.json());
 app.use(cookieParser());
