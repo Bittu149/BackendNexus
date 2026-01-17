@@ -14,8 +14,14 @@ const { redisClient, connectRedis } = require("./config/redis");
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(rateLimiter);
+
 app.use("/auth", authRouter);
 app.use("/", userRouter);
+
+
+
 
 // Initialize connection
 const InitializeConnection = async () => {
