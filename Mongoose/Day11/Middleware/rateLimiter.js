@@ -7,11 +7,25 @@ const maxREquest = 60;  // max request in window size
 const rateLimiter = async (req, res, next) => {
 
     try{
-        const key = req.ip;
-        const currentTime = Date.now();
+        const key = `IP:${req.ip}`;
+
+        const currentTime = Date.now()/1000; // in seconds 
         const window_Time = currentTime - windowSize;
 
         await redisClient.zRemRangeByScore(key, 0, window_Time);
+
+        const numberofRequest = await redisClient.zCard(key);
+
+        if(numberofRequest >= maxREquest){
+            throw new Error("Number of requests exceeded");
+        }
+        await redisClient.zAdd(key, [{score: currentTime, value: `${currentTime}:${Math.random()}`}]);
+        // request is added
+
+        // key  TTL usko increse karna ha 
+        await redisClient.expire(key, windowSize);
+        next();
+
 
 
     } 
