@@ -1,23 +1,20 @@
 
 const { redisClient } = require('../config/redis');
 
+const windowSize = 3600;  // Total time
+const maxREquest = 60;  // max request in window size
+
 const rateLimiter = async (req, res, next) => {
 
     try{
-        const ip = req.ip;
+        const key = req.ip;
+        const currentTime = Date.now();
+        const window_Time = currentTime - windowSize;
 
-        const count = await redisClient.incr(ip);
+        await redisClient.zRemRangeByScore(key, 0, window_Time);
 
-        if(count > 60){
-            throw new Error("User limit excedded");
-        }
 
-        if(count ==1){
-           await redisClient.expire(3600); // 1 hour
-        }
-        next();
-
-    }
+    } 
     catch(err){
         res.send("Error:" +err.message);
 
@@ -26,3 +23,15 @@ const rateLimiter = async (req, res, next) => {
 }
 
 module.exports = rateLimiter;
+
+// sliding window algorithm
+// using sorted sets in redis
+// set_implement == value unique
+// key == multiple value 
+// score : number
+// score can be duplicate
+// key = user ip
+// score = current time(UNIX SECONDS)
+// value = 
+// math.random = initial_seed = system clock 
+// crypto.random = initial_seed = hardware entropy source
