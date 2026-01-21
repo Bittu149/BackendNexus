@@ -14,3 +14,4 @@ async function main(msg) {
 }
 
 module.exports = main;
+// got to the  google ai studio and create api key for gemini model and paste it in the .env file
