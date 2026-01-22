@@ -5,6 +5,11 @@ const aichat = require('./Aichat');
 
 app.use(express.json()); // convert incoming json data to js object
 
+const chattingHistory = [];
+// we  will install our user chat history here
+// key value pair me history ko store karenge
+
+
 app.post('/chat', async (req, res) => {
     const { msg } = req.body;
 
