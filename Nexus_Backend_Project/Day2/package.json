@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@google/genai": "^1.38.0"
+    "@google/genai": "^1.38.0",
+    "readline-sync": "^1.4.10"
   }
 }
