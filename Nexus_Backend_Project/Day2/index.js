@@ -1,42 +1,41 @@
 require("dotenv").config();
 
-const { GoogleGenAI } = require("@google/genai");
-const readlineSync = require('readline-sync');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const readlineSync = require("readline-sync");
 
-// node-fetch fix (same style)
+
 const fetch = (...args) =>
-  import('node-fetch').then(({ default: fetch }) => fetch(...args));
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 const ConversationHistory = [];
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
-});
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 async function main() {
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: ConversationHistory
-  });
+  const promptText = ConversationHistory
+    .map(m => m.parts[0].text)
+    .join("\n");
 
-  return response.candidates[0].content.parts[0].text;
+  const result = await model.generateContent(promptText);
+  return result.response.text();
 }
 
-// Weather leke aayega function 
-async function getWheather(location){
+
+async function getWheather(location) {
 
   const weatherInfo = [];
 
-  for(const { city, date } of location){
+  for (const { city, date } of location) {
 
-    if(date.toLowerCase() == 'today'){
+    if (date.toLowerCase() === "today") {
       const response = await fetch(
         `http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=${city}`
       );
       const data = await response.json();
       weatherInfo.push(data);
-    }
-    else{
+    } else {
       const response = await fetch(
         `http://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=${city}&days=3`
       );
@@ -47,11 +46,11 @@ async function getWheather(location){
 
   return weatherInfo;
 }
+async function chatting() {
 
-async function chatting(){
+  const question = readlineSync.question("How I can Help You--> ");
 
-  const question = readlineSync.question('How I can Help You--> ');
-
+  
   const prompt = `
 Your are an AI agent, who will respond to me in JSON format only.
 Analyse the user query and try to fetch city and date details from it.
@@ -67,6 +66,7 @@ JSON format should look like below:
 }
 
 Once you have the weather report details, respond me in JSON format only.
+If I have provided you weather details of delhi and you have enough information about them,make the summary of weather report and return it o me like below.
 JSON format should look like below:
 {
  "weather_details_needed": false,
@@ -79,23 +79,51 @@ Strictly follow JSON format, respond only in JSON format, don't add extra space 
 `;
 
   ConversationHistory.push({
-    role:"user",
-    parts:[{ text: prompt }]
+    role: "user",
+    parts: [{ text: prompt }]
   });
 
-  try {
-    let response = await main();
+  for (let i = 0; i < 3; i++) {
 
-    // remove ```json fences if Gemini adds them
-    response = response.replace(/^```json\s*|```$/g, '').trim();
+    let responseText;
+    try {
+      responseText = await main();
+    } catch (err) {
+      console.log("Gemini busy hai, thoda baad try karo");
+      return;
+    }
+    response = response.trim();
+    responseText = responseText.replace(/^```json\s*|```$/g, "").trim();
 
-    const data = JSON.parse(response);
-    console.log(data);
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (err) {
+      console.log(" Gemini ne valid JSON nahi diya");
+      return;
+    }
 
-  } catch (err) {
-    console.log(" Error parsing Gemini response");
-    console.log(err.message);
+    if (data.weather_details_needed === false) {
+      console.log(data.weather_report);
+      return;
+    }
+
+    const weatherInformation = await getWheather(data.location);
+    const weatherInfo = JSON.stringify(weatherInformation);
+
+    ConversationHistory.push({
+      role: "user",
+      parts: [{ text: weatherInfo }]
+    });
   }
+
+  console.log(" Agent loop limit reached");
 }
 
 chatting();
+
+// 4 Api use karana hai 
+// first agent: mausam ke baare me btayega
+// Blockchain 
+// Github profile leke aayega 
+// News current new btayega 
