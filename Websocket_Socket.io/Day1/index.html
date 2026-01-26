@@ -10,5 +10,10 @@
     <div id="messageDisplay" style="height:50vh; width:50vw; background-color: cornflowerblue; margin-bottom: 20px;"></div>
     <input type="text" placeholder="type your msg here" id="message"style="height:10vh; width:40vw;">
     <button onclick="sendMessage()">Send</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+    </script>
 </body>
 </html>
