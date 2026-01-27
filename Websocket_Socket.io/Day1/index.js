@@ -22,6 +22,10 @@ io.on("connection",(socket)=>{
         socket.broadcast.emit('new-message',data);// emit matlab bhejna or broadcast se mujhe nhi show hoga msg but dusre ko hoga show
     })
 
+    socket.on('join-room',(room)=>{
+        socket.join(room);  // socket.join se haam room create kar skte hai 
+    })
+
     socket.on("disconnect",()=>{
         console.log("Disconnected from server")
     })
