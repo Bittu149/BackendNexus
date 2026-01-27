@@ -19,6 +19,7 @@
 
     const messageBox = document.getElementById('messageDisplay');
     const messageInput = document.getElementById('message');
+    const roomNumber =  document.getElementById('roomNumber');
 
     function sendMessage(){
         const msg = messageInput.value;
@@ -29,6 +30,11 @@
         messageBox.appendChild(element);
         messageInput.value = '';
 
+    }
+
+    function joinRoom(){
+        const room = roomNumber.value;
+        socket.emit('join-room',room);
     }
 
     socket.on('new-message',(data)=>{
