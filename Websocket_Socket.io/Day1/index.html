@@ -7,7 +7,9 @@
 </head>
 <body>
     <h1>CHAT APP</h1>
-    <div id="messageDisplay" style="height:50vh; width:50vw; background-color: cornflowerblue; margin-bottom: 20px;"></div>
+    <input type="text" placeholder="Enter room Number" id="roomNumber">
+    <button onClick="joinRoom()">Join</button>
+    <div id="messageDisplay" style="height:50vh; width:50vw; background-color: cornflowerblue; margin-bottom: 20px; margin-top:20px;"></div>
     <input type="text" placeholder="type your msg here" id="message"style="height:10vh; width:40vw; font-size:larger">
     <button onclick="sendMessage()">Send</button>
 
