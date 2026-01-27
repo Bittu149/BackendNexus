@@ -16,17 +16,10 @@ app.get('/', (req,res)=>{
 
 });
 
-
-
-
-
-
-
-
 io.on("connection",(socket)=>{
 
     socket.on('message',(data)=>{// io matlab mai sabko listen kar raha hu multiple
-        io.emit('new-message',data);// emit matlab bhejna 
+        socket.broadcast.emit('new-message',data);// emit matlab bhejna or broadcast se mujhe nhi show hoga msg but dusre ko hoga show
     })
 
     socket.on("disconnect",()=>{
